@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "497777150030",
+    "project_id": "bingo-67b82",
+    "storage_bucket": "bingo-67b82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497777150030:android:d091c7804b260c38809b1f",
+        "android_client_info": {
+          "package_name": "com.scarach.spin_earn_money"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497777150030-ok5qkc6fb6uk715i4ethcv7kc6d99984.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRU97od6huwSMoQDVeMz6T2P7CQpvg9IM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497777150030-ok5qkc6fb6uk715i4ethcv7kc6d99984.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
