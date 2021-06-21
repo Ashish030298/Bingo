@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/top_layout"
+            android:id="@+id/copy_refer_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:elevation="5dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
+            android:elevation="5dp"
             app:cardCornerRadius="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,37 +26,37 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:paddingStart="8dp"
+                android:paddingTop="16dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="16dp">
 
                 <ImageView
+                    android:id="@+id/backBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_arrow_back_24"
                     android:visibility="gone"
-                    android:id="@+id/backBtn"
                     app:tint="@color/purple_200" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingEnd="24dp"
-                    android:gravity="center">
+                    android:paddingEnd="24dp">
 
 
                     <TextView
+                        android:id="@+id/title_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/title_tv"
-                        android:textSize="18sp"
                         android:text="Dashboard"
-                        android:textStyle="bold"
-                        android:textColor="@color/purple_200"/>
+                        android:textColor="@color/purple_200"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -75,9 +75,10 @@
             app:layout_constraintEnd_toStartOf="@+id/Scratch"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_layout">
+            app:layout_constraintTop_toBottomOf="@+id/copy_refer_text">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/actionBonus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#2f26d9">
@@ -231,8 +232,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            app:cardCornerRadius="15dp"
             android:elevation="5dp"
+            app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toTopOf="@+id/Refer"
             app:layout_constraintEnd_toStartOf="@+id/task"
             app:layout_constraintHorizontal_bias="0.5"
@@ -392,12 +393,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:elevation="5dp"
             app:cardCornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Ad"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spin">
@@ -464,6 +465,92 @@
                     app:layout_constraintEnd_toStartOf="@+id/referFrame2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/referIcon" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/Ad"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="5dp"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/Refer"
+            app:layout_constraintTop_toBottomOf="@+id/spin">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="#112B39">
+
+
+                <FrameLayout
+                    android:id="@+id/adFrame1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="-30dp"
+                    android:layout_marginBottom="-12dp"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="#7dd1fd"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+
+                <FrameLayout
+                    android:id="@+id/adFrame2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="-12dp"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="#7dd1fd"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/adIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="25dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/nativePrimary"
+                        android:layout_width="100px"
+                        android:layout_height="100px"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_referral" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Refer &amp;\nEarn"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/adFrame2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/adIcon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "497777150030-7g57qi4qageg546tm624vk127sqa6or6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scarach.spin_earn_money",
+            "certificate_hash": "3c59f108feccaf449aa47700fe4eef5356fc6fcc"
+          }
+        },
+        {
           "client_id": "497777150030-ok5qkc6fb6uk715i4ethcv7kc6d99984.apps.googleusercontent.com",
           "client_type": 3
         }

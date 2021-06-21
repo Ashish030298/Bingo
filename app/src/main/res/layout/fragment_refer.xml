@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ReferFragment">
+    tools:context=".home.ReferFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/top_layout"
+            android:id="@+id/copy_refer_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:elevation="5dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
+            android:elevation="5dp"
             app:cardCornerRadius="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,36 +26,36 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingTop="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:paddingStart="8dp"
+                android:paddingTop="16dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="16dp">
 
                 <ImageView
+                    android:id="@+id/backBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_arrow_back_24"
-                    android:id="@+id/backBtn"
                     app:tint="@color/purple_200" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingEnd="24dp"
-                    android:gravity="center">
+                    android:paddingEnd="24dp">
 
 
                     <TextView
+                        android:id="@+id/title_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/title_tv"
-                        android:textSize="18sp"
                         android:text="Refer &amp; Earn"
-                        android:textStyle="bold"
-                        android:textColor="@color/purple_200"/>
+                        android:textColor="@color/purple_200"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -72,14 +72,15 @@
             android:src="@drawable/refer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/copy_refer_text" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/referDescription"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="32dp"
             android:gravity="center"
             android:padding="8dp"
             android:text="@string/refer_describe"
@@ -88,6 +89,97 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/referImage" />
+
+
+        <TextView
+            android:id="@+id/refer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Your Refer Code"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/copy_refer_id"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/referDescription"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/copy_refer_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="80dp"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/refer">
+
+            <fr.castorflex.android.circularprogressbar.CircularProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/pb"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:padding="8dp"
+                app:cpb_color="#FFee44"
+                app:cpb_colors="@array/rainbow"
+                app:cpb_max_sweep_angle="300"
+                app:cpb_min_sweep_angle="10"
+                app:cpb_rotation_speed="1.0"
+                app:cpb_stroke_width="3dp"
+                app:cpb_sweep_speed="1.0" />
+
+            <TextView
+                android:id="@+id/setRefer_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="7700"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="Long press to copy"
+            app:layout_constraintBottom_toTopOf="@+id/referBtn"
+            app:layout_constraintEnd_toEndOf="@+id/copy_refer_id"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/copy_refer_id"
+            app:layout_constraintTop_toBottomOf="@+id/copy_refer_id" />
+
+        <Button
+            android:id="@+id/referBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="64dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/btn_bg"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Refer your friends"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

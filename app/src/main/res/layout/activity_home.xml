@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".home.HomeActivity">
 
 
     <FrameLayout
@@ -43,7 +43,7 @@
                 android:layout_weight="1"
                 android:padding="16dp"
                 android:src="@drawable/ic_home_icon"
-                android:tint="#999999" />
+                app:tint="#999999" />
 
             <ImageView
                 android:id="@+id/action_share"
@@ -51,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="16dp"
-                android:src="@drawable/ic_baseline_share_24"
-                android:tint="#999999" />
+                android:src="@drawable/ic_gift"
+                app:tint="#999999" />
 
             <ImageView
                 android:id="@+id/action_wallet"
@@ -61,7 +61,7 @@
                 android:layout_weight="1"
                 android:padding="16dp"
                 android:src="@drawable/ic_wallet"
-                android:tint="#999999" />
+                app:tint="#999999" />
 
             <ImageView
                 android:id="@+id/action_profile"
@@ -69,8 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="16dp"
-                android:src="@drawable/ic_person"
-                android:tint="#999999" />
+                android:src="@drawable/ic_user"
+                app:tint="#999999" />
 
         </LinearLayout>
 

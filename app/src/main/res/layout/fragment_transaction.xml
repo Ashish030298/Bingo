@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".TransactionFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:layout_gravity="center"/>
+        android:id="@+id/transactionRV"
+        android:padding="8dp" />
 
 </FrameLayout>

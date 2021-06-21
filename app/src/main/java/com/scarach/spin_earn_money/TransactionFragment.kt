@@ -1,59 +1,47 @@
 package com.scarach.spin_earn_money
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.scarach.spin_earn_money.databinding.FragmentTransactionBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [TransactionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class TransactionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentTransactionBinding
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    private lateinit var transactionList: ArrayList<Transaction>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction, container, false)
+        savedInstanceState: Bundle?,
+    ): View {
+        binding = FragmentTransactionBinding.inflate(inflater, container, false)
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+        transactionList = ArrayList()
+        transactionList.clear()
+        db.collection("users")
+            .document(auth.currentUser?.uid.toString())
+            .collection("transaction")
+            .get().addOnSuccessListener {
+                for (snapshot in it) {
+                    val transaction = snapshot.toObject(Transaction::class.java)
+                    transactionList.add(transaction)
+                }
+                val adapter = TransactionAdapter(activity as Activity, transactionList)
+                binding.transactionRV.adapter = adapter
+                binding.transactionRV.layoutManager = LinearLayoutManager(context)
+
+            }
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TransactionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TransactionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+    companion object
 }

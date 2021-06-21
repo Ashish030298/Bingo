@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WalletFragment">
+    tools:context=".home.WalletFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/top_layout"
+            android:id="@+id/copy_refer_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_arrow_back_24"
-                    android:tint="@color/purple_200" />
+                    app:tint="@color/purple_200" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                         android:id="@+id/title_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Title"
+                        android:text="Wallet &amp; History"
                         android:textColor="@color/purple_200"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -71,7 +71,7 @@
             android:layout_marginTop="16dp"
             android:text="Current Balance"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/copy_refer_text" />
 
         <TextView
             android:id="@+id/currentBalance"
