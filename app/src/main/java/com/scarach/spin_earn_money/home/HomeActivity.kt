@@ -4,14 +4,12 @@ package com.scarach.spin_earn_money.home
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -20,6 +18,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.scarach.spin_earn_money.CoreBaseActivity
 import com.scarach.spin_earn_money.R
+import com.startapp.sdk.ads.nativead.NativeAdDetails
+import com.startapp.sdk.ads.nativead.NativeAdPreferences
+import com.startapp.sdk.ads.nativead.StartAppNativeAd
+import com.startapp.sdk.adsbase.Ad
+import com.startapp.sdk.adsbase.adlisteners.AdEventListener
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -47,11 +50,51 @@ class HomeActivity : CoreBaseActivity() {
         profile = findViewById(R.id.action_profile)
         backBtn = findViewById(R.id.backBtn)
         title = findViewById(R.id.title_tv)
-
+        ad()
         //getUserData()
         clickListener()
         homeFragment()
 
+    }
+
+    private fun ad() {
+        val startAppNativeAd = StartAppNativeAd(this)
+        // Declare Native Ad Preferences
+        // Declare Native Ad Preferences
+        val nativePrefs = NativeAdPreferences()
+            .setAdsNumber(3) // Load 3 Native Ads
+            .setAutoBitmapDownload(true) // Retrieve Images object
+            .setPrimaryImageSize(2) // 150x150 image
+
+
+// Declare Ad Callbacks Listener
+
+// Declare Ad Callbacks Listener
+        val adListener: AdEventListener = object : AdEventListener {
+            // Callback Listener
+            override fun onReceiveAd(arg0: Ad) {
+                // Native Ad received
+                val ads: ArrayList<NativeAdDetails> = startAppNativeAd.nativeAds // get NativeAds list
+
+                // Print all ads details to log
+                val iterator: Iterator<*> = ads.iterator()
+                while (iterator.hasNext()) {
+                    Log.d("MyApplication", iterator.next().toString())
+                }
+
+                Log.d(TAG, "onReceiveAd: ${ads[1].title}")
+            }
+
+            override fun onFailedToReceiveAd(arg0: Ad) {
+                // Native Ad failed to receive
+                Log.e("MyApplication", "Error while loading Ad")
+            }
+        }
+
+// Load Native Ads
+
+// Load Native Ads
+        startAppNativeAd.loadAd(nativePrefs, adListener)
     }
 
     fun copyToClipboard(text: CharSequence) {
@@ -148,14 +191,8 @@ class HomeActivity : CoreBaseActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    override fun onStart() {
-        super.onStart()
-    }
-
 
 }
-
 
 class ViewPagerAdapter(manager: FragmentManager?) :
     FragmentStatePagerAdapter(manager!!) {
@@ -178,6 +215,8 @@ class ViewPagerAdapter(manager: FragmentManager?) :
         mFragmentList.add(fragment)
         mFragmentTitleList.add(title)
     }
+
+
 
 
 }

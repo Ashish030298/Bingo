@@ -3,6 +3,10 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
+    id 'applovin-quality-service'
+}
+applovin {
+    apiKey = "9FgcuENQC86s5B3nJsJmQHWh5Gw-P4GVm_68fkfK8oKMQbRAn4TCCrk9AON2Q5ozpU4IyIqd_CvE76n_eJRNLg"
 }
 
 android {
@@ -63,6 +67,12 @@ dependencies {
     implementation 'com.startapp:inapp-sdk:4.8.+'
 
     implementation 'com.github.castorflex.smoothprogressbar:library-circular:1.4.0-SNAPSHOT'
+
+    //applovin
+    implementation 'com.applovin:applovin-sdk:+'
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
+
+    implementation 'com.android.volley:volley:1.2.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

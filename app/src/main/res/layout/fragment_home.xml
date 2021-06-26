@@ -446,19 +446,21 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_referral" />
+                        android:src="@drawable/ic_test" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:id="@+id/title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="Refer &amp;\nEarn"
+                    android:text="Task-2 To \nWin"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -534,7 +536,7 @@
                         android:layout_width="100px"
                         android:layout_height="100px"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_referral" />
+                        android:src="@drawable/ic_telegram_app" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -544,7 +546,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="Refer &amp;\nEarn"
+                    android:text="Join Telegram &amp;\n update with us"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -50,7 +50,7 @@ class SpinActivity : CoreBaseActivity() {
             override fun adClicked(ad: Ad) {
                 Log.d("TAG", "adClicked: ${ad.type}")
                 isTimerFinished = true
-                if (AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SPIN, 0) == spin) {
+                if (AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SPIN, 0) == getSpin) {
                     timer = object : CountDownTimer(60000, 1000) {
                         override fun onTick(millisUntilFinished: Long) {
 
@@ -96,16 +96,16 @@ class SpinActivity : CoreBaseActivity() {
     private fun spinCount() {
         var totalSpin = AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SPIN, 0)
         when {
-            totalSpin < spin -> {
+            totalSpin < getSpin -> {
                 totalSpin++
                 AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SPIN, totalSpin)
-                binding.showTime.text = "Total Spin: $totalSpin/$spin"
+                binding.showTime.text = "Total Spin: $totalSpin/$getSpin"
                 val r = Random()
                 val randomNumber: Int = r.nextInt(8)
                 binding.wheelview.startLuckyWheelWithTargetIndex(randomNumber)
                 binding.spin.isClickable = false
             }
-            totalSpin == spin -> {
+            totalSpin == getSpin -> {
                 binding.spin.isClickable = false
                 Toast.makeText(this,
                     "Click ad and wait 1 min. & earn Upto 50 coin ",
@@ -134,12 +134,12 @@ class SpinActivity : CoreBaseActivity() {
         val xDate = dateFormat.format(currentDate)
         val date = dateFormat.parse(xDate)
         if (date.after(dbDate) && date.compareTo(dbDate) != 0) {
-            binding.showTime.text = "Total Spin: 0/$spin"
+            binding.showTime.text = "Total Spin: 0/$getSpin"
             AppPreferences.putString(AppPreferences.PrefKeys.SPIN_DATE, xDate)
             AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SPIN, 0)
         } else {
             val totalSpin = AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SPIN, 0)
-            binding.showTime.text = "Total Spin: $totalSpin/$spin"
+            binding.showTime.text = "Total Spin: $totalSpin/$getSpin"
 
         }
     }
@@ -237,7 +237,7 @@ class SpinActivity : CoreBaseActivity() {
         super.onResume()
         if (isTimerFinished) {
             timer.cancel()
-            Toast.makeText(this, "Oops! you miss the Bonus", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Oops! you miss the Spin Bonus", Toast.LENGTH_SHORT).show()
         }
     }
 

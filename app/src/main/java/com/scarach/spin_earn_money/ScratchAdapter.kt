@@ -14,6 +14,7 @@ class ScratchAdapter(val context: Context, private val scratchList: ArrayList<Sc
         val binding = ScratchItemBinding.bind(itemView)
         var scratchTv = binding.randomScratch
         var scratchCardView = binding.scratchCard
+        var scratchData = binding.scratchData
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScratchViewHolder {
@@ -23,6 +24,14 @@ class ScratchAdapter(val context: Context, private val scratchList: ArrayList<Sc
 
     override fun onBindViewHolder(holder: ScratchViewHolder, position: Int) {
         val scratch = scratchList[position]
+        holder.scratchTv.text = scratch.scratchcoin
+        if (!scratch.isMask){
+            holder.scratchCardView.visibility = View.VISIBLE
+        }else{
+            holder.scratchData.visibility = View.VISIBLE
+            holder.scratchCardView.visibility = View.GONE
+
+        }
     }
 
     override fun getItemCount(): Int {

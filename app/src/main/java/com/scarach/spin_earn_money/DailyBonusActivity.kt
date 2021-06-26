@@ -7,6 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.applovin.mediation.MaxAd
+import com.applovin.mediation.MaxAdListener
+import com.applovin.mediation.MaxError
+import com.applovin.mediation.ads.MaxInterstitialAd
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,10 +20,13 @@ import com.startapp.sdk.adsbase.StartAppAd
 import com.startapp.sdk.adsbase.adlisteners.AdEventListener
 import java.util.*
 
-class DailyBonusActivity : CoreBaseActivity() {
+
+class DailyBonusActivity : CoreBaseActivity(), MaxAdListener {
     private lateinit var binding: ActivityDailyBonusBinding
     private val TAG = "DailyBonusActivity"
     private var dailyBonusDate = ""
+    private var interstitialAd: MaxInterstitialAd? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDailyBonusBinding.inflate(layoutInflater)
@@ -29,7 +36,12 @@ class DailyBonusActivity : CoreBaseActivity() {
 
 
         binding.addBonusBtn.setOnClickListener {
-            showRewardedVideo(it)
+            //showRewardedVideo(it)
+            if (interstitialAd?.isReady == true){
+                interstitialAd?.showAd()
+            }else{
+                Toast.makeText(this, "Please try letter!", Toast.LENGTH_SHORT).show()
+            }
             binding.addBonusBtn.isClickable = false
 
         }
@@ -101,6 +113,7 @@ class DailyBonusActivity : CoreBaseActivity() {
                             .document(UUID.randomUUID().toString())
                             .set(transaction)
                         getUserData()
+                        Toast.makeText(this,"Awesome daily bonus is add in your wallet",Toast.LENGTH_SHORT).show()
                     }
             }
     }
@@ -141,15 +154,54 @@ class DailyBonusActivity : CoreBaseActivity() {
             override fun onFailedToReceiveAd(ad: Ad) {
                 Toast.makeText(applicationContext, "Can't show rewarded video", Toast.LENGTH_SHORT)
                     .show()
+
                 binding.addBonusBtn.isClickable = true
             }
         })
     }
 
+    private fun showApplovin(){
+        interstitialAd = MaxInterstitialAd("274d1164d0b4a1f8", this)
+        interstitialAd?.setListener(this)
+
+        // Load the first ad
+
+        // Load the first ad
+        interstitialAd?.loadAd()
+    }
+
     override fun onStart() {
         super.onStart()
         getUserData()
+        showApplovin()
 
+    }
+
+    override fun onAdLoaded(ad: MaxAd?) {
+//        interstitialAd?.showAd()
+    }
+
+    override fun onAdDisplayed(ad: MaxAd?) {
+        checkDailyBonus()
+    }
+
+    override fun onAdHidden(ad: MaxAd?) {
+        interstitialAd?.loadAd();
+    }
+
+    override fun onAdClicked(ad: MaxAd?) {
+        Log.d(TAG, "onAdClicked: ")
+
+    }
+
+    override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+        binding.addBonusBtn.isClickable = true
+        interstitialAd?.loadAd();
+    }
+
+    override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
+        interstitialAd?.loadAd();
+        binding.addBonusBtn.isClickable = true
     }
 
 }

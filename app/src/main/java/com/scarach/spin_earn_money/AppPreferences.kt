@@ -112,6 +112,12 @@ class AppPreferences {
         const val TOTAL_SPIN = "TOTAL_SPIN"
         const val SCRATCH_DATE = "SCRATCH_DATE"
         const val TOTAL_SCRATCH = "TOTAL_SCRATCH"
+        const val TOTAL_IMPRESSION_TASK_One = "TOTAL_IMPRESSION_TASK_One"
+        const val TOTAL_CLICk_TASK_One = "TOTAL_CLICk_TASK_One"
+        const val TOTAL_IMPRESSION_TASK_Two = "TOTAL_IMPRESSION_TASK_Two"
+        const val TOTAL_CLICk_TASK_Two = "TOTAL_CLICk_TASK_Two"
+        const val NEXT_TASK = "NEXT_TASK"
+        const val OPEN_TASK_2 = "OPEN_TASK_2"
 
 
     }

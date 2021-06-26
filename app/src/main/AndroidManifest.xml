@@ -15,8 +15,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Bingo">
-        <activity android:name=".FloatingActivity"></activity>
+        android:theme="@style/Theme.Bingo"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ViewDialog"></activity>
+        <activity android:name=".withdrwal.WithdrawalActivity" />
+        <activity android:name=".FloatingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +31,7 @@
         <activity android:name=".SpinActivity" />
         <activity android:name=".ScratchActivity" />
         <activity android:name=".DailyBonusActivity" /> <!-- <activity android:name=".ProfileActivity" /> -->
-        <activity android:name=".home.HomeActivity"></activity>
+        <activity android:name=".home.HomeActivity" />
 
         <meta-data
             android:name="com.startapp.sdk.APPLICATION_ID"
@@ -36,6 +39,9 @@
         <meta-data
             android:name="com.startapp.sdk.RETURN_ADS_ENABLED"
             android:value="false" />
+        <meta-data
+            android:name="applovin.sdk.key"
+            android:value="RKE97oL36SQITvUa-plu4ayCepQ0H_-s8R6TQfQ5GWSlamTaGGbb7POANDFMdn_tmeFi-0_uTbG7LQJoXAPqOn" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.scarach.spin_earn_money
+ package com.scarach.spin_earn_money
 
 import android.app.Activity
 import android.os.Bundle

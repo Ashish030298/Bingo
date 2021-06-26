@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.anupkumarpanwar.scratchview.ScratchView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -17,12 +18,16 @@ import com.scarach.spin_earn_money.databinding.ActivityScratchBinding
 import com.startapp.sdk.adsbase.Ad
 import com.startapp.sdk.adsbase.adlisteners.AdDisplayListener
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
     private lateinit var binding: ActivityScratchBinding
     private lateinit var scratchCard: ScratchView
     private lateinit var timer: CountDownTimer
     private var isTimerFinished: Boolean = false
+    private var randomNumber: Int = 0
+    private lateinit var scratchAdapter: ScratchAdapter
+    private lateinit var scratchList : ArrayList<Scratch>
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +35,9 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
         binding = ActivityScratchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         scratchCard = binding.scratchCard
+//        getScratch()
+        scratchList = ArrayList()
+
         checkDailyScratch()
         setScratch()
         scratchCard.setRevealListener(this)
@@ -37,9 +45,30 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
             onBackPressed()
         }
 
-        Log.d("TAG", "onCreate: $scratch")
+        Log.d("TAG", "onCreate: $getScratch")
+
+        val layoutManager = GridLayoutManager(this, 2)
+//        binding.scratchRv.setHasFixedSize(true)
+//        binding.scratchRv.layoutManager = layoutManager
 
     }
+   /* fun getScratch(){
+        db.collection("Admin")
+            .document("scratch")
+            .collection("scratch1")
+            .get()
+            .addOnSuccessListener { result ->
+            for (document in result) {
+               val scratch = document.toObject(Scratch::class.java)
+                Log.d("TAG", "getScratch: $scratch")
+                scratchList.add(scratch)
+            }
+                scratchAdapter = ScratchAdapter(this,scratchList)
+                binding.scratchRv.adapter = scratchAdapter
+
+                Log.d("TAG", "getScratchList: $scratchList")
+        }
+    }*/
 
 
     private fun showAddMoneyDialog() {
@@ -91,15 +120,15 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
         val xDate = dateFormat.format(currentDate)
         val date = dateFormat.parse(xDate)
         if (date.after(dbDate) && date.compareTo(dbDate) != 0) {
-            binding.totalScratchCard.text = "Total Scratch: 0/$scratch"
+            binding.totalScratchCard.text = "Total Scratch: 0/$getScratch"
             AppPreferences.putString(AppPreferences.PrefKeys.SCRATCH_DATE, xDate)
             AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, 0)
         } else {
             val totalScratch = AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, 0)
-            if (totalScratch == scratch) {
+            if (totalScratch == getScratch) {
                 binding.totalScratchCard.text = "Today Scratch is completed!"
             } else {
-                binding.totalScratchCard.text = "Total Scratch: $totalScratch/$scratch"
+                binding.totalScratchCard.text = "Total Scratch: $totalScratch/$getScratch"
             }
 
         }
@@ -107,7 +136,7 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
 
     private fun setScratch() {
         val r = Random()
-        val randomNumber: Int = r.nextInt(10)
+        randomNumber = r.nextInt(5)
         binding.randomScratch.text = randomNumber.toString()
     }
 
@@ -122,6 +151,60 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
         scratchView?.reveal()
         showAdInterstitial()
         countScratch(scratchView)
+        updateScratchCoin(randomNumber,"Win scratch")
+    }
+
+
+    override fun onRevealPercentChangedListener(scratchView: ScratchView?, percent: Float) {
+        if (percent >= 20) {
+            scratchView?.reveal()
+            Log.d("Reveal Percentage", "onRevealPercentChangedListener: $percent")
+        }
+    }
+
+    private fun updateScratchCoin(cash:Int, title: String) {
+        db.collection("users")
+            .document(auth.currentUser?.uid.toString())
+            .update("userCoin", FieldValue.increment(cash.toLong()))
+            .addOnSuccessListener {
+                        val transaction = Transaction(
+                            title = title,
+                            time = Calendar.getInstance().time.toString(),
+                            coin = cash.toString()
+                        )
+                        db.collection("users")
+                            .document(auth.currentUser?.uid.toString())
+                            .collection("transaction")
+                            .document(UUID.randomUUID().toString())
+                            .set(transaction)
+
+            }
+    }
+
+
+    private fun countScratch(scratchView: ScratchView?) {
+        var totalScratch = AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, 0)
+        totalScratch++
+        when {
+            totalScratch < getScratch -> {
+                AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, totalScratch)
+                binding.totalScratchCard.text = "Total Scratch: $totalScratch/$getScratch"
+                scratchView?.postDelayed({
+                    scratchView.mask()
+                    setScratch()
+                }, 5000)
+            }
+            totalScratch == getScratch -> {
+                Toast.makeText(this,
+                    "Click ad and wait 1 min. & earn UpTo 50 coin ",
+                    Toast.LENGTH_SHORT).show()
+                AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, totalScratch)
+                binding.totalScratchCard.text = "Today Scratch is completed!"
+            }
+            else -> {
+                Toast.makeText(this, "Today Scratch is Complete", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun showAdInterstitial() {
@@ -131,7 +214,7 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
             override fun adClicked(ad: Ad) {
                 Log.d("TAG", "adClicked: ${ad.type}")
                 isTimerFinished = true
-                if (AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, 0) == scratch) {
+                if (AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, 0) == getScratch) {
                     timer = object : CountDownTimer(60000, 1000) {
                         override fun onTick(millisUntilFinished: Long) {
 
@@ -139,7 +222,7 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
 
                         override fun onFinish() {
                             isTimerFinished = false
-                            updateScratchCoin()
+                            updateScratchCoin(25, "Win Scratch Bonus")
                         }
                     }.start()
                 }
@@ -150,43 +233,17 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
         })
     }
 
-    private fun updateScratchCoin() {
-        db.collection("users")
-            .document(auth.currentUser?.uid.toString())
-            .update("userCoin", FieldValue.increment(25))
-    }
-
-    private fun countScratch(scratchView: ScratchView?) {
-        var totalScratch = AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, 0)
-        totalScratch++
-        when {
-            totalScratch < scratch -> {
-                AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, totalScratch)
-                binding.totalScratchCard.text = "Total Scratch: $totalScratch/$scratch"
-                scratchView?.postDelayed({
-                    scratchView.mask()
-                }, 5000)
-            }
-            totalScratch == scratch -> {
-                AppPreferences.putInt(AppPreferences.PrefKeys.TOTAL_SCRATCH, totalScratch)
-                binding.totalScratchCard.text = "Today Scratch is completed!"
-            }
-            else -> {
-                Toast.makeText(this, "Today Scratch is Complete", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    override fun onRevealPercentChangedListener(scratchView: ScratchView?, percent: Float) {
-        if (percent >= 20) {
-            scratchView?.reveal()
-            Log.d("Reveal Percentage", "onRevealPercentChangedListener: $percent")
-        }
-    }
-
     override fun onBackPressed() {
         startAppAd.onBackPressed()
         super.onBackPressed()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isTimerFinished) {
+            timer.cancel()
+            Toast.makeText(this, "Oops! you miss the Scratch Bonus", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

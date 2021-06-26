@@ -2,6 +2,7 @@ package com.scarach.spin_earn_money.home
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.scarach.spin_earn_money.R
 import com.scarach.spin_earn_money.TransactionFragment
 import com.scarach.spin_earn_money.databinding.FragmentWalletBinding
+import com.scarach.spin_earn_money.withdrwal.WithdrawalActivity
 import com.startapp.sdk.adsbase.StartAppAd
 
 
@@ -67,6 +69,10 @@ class WalletFragment : Fragment() {
 
         viewPager.adapter = adapter
 
+
+        binding.redeem.setOnClickListener {
+            startActivity(Intent(context, WithdrawalActivity::class.java))
+        }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 

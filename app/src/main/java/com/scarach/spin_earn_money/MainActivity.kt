@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -14,13 +15,17 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.scarach.spin_earn_money.databinding.ActivityMainBinding
 import com.scarach.spin_earn_money.home.HomeActivity
+import com.startapp.sdk.adsbase.StartAppAd
+import com.startapp.sdk.adsbase.StartAppSDK
 import java.util.*
 
-class MainActivity : CoreBaseActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val TAG = "MainActivity"
     private val RC_SIGN_IN = 103
+    private lateinit var db:FirebaseFirestore
+    private lateinit var auth:FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -116,7 +121,13 @@ class MainActivity : CoreBaseActivity() {
         val user = auth.currentUser
         if (user != null) {
             goToNewActivity()
+            initailize()
         }
+    }
+
+    fun initailize(){
+        StartAppSDK.init(CoreBaseActivity.mContext, CoreBaseActivity.ad_id, false)
+        StartAppAd.disableSplash()
     }
 
 }

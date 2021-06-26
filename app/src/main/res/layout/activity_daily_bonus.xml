@@ -170,6 +170,7 @@
         android:layout_marginBottom="24dp"
         android:text="You already collect Today's Big Bonus"
         android:textColor="#9C2121"
+        android:visibility="gone"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/startAppBanner"
         app:layout_constraintEnd_toEndOf="parent"
