@@ -12,6 +12,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.scarach.spin_earn_money.*
 import com.scarach.spin_earn_money.databinding.FragmentHomeBinding
 import com.startapp.sdk.ads.nativead.NativeAdDetails
@@ -19,6 +23,7 @@ import com.startapp.sdk.ads.nativead.NativeAdPreferences
 import com.startapp.sdk.ads.nativead.StartAppNativeAd
 import com.startapp.sdk.adsbase.Ad
 import com.startapp.sdk.adsbase.adlisteners.AdEventListener
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -26,6 +31,8 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var startAppNativeAd: StartAppNativeAd
     private lateinit var nativeAdList: List<NativeAdDetails>
+    private lateinit var db : FirebaseFirestore
+    private lateinit var auth : FirebaseAuth
 
 
     override fun onCreateView(
@@ -34,6 +41,8 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
       //  loadNativeAd()
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
         val home = activity?.findViewById<ImageView>(R.id.action_home)
         home?.setColorFilter(ContextCompat.getColor(context as Activity, R.color.colorPrimary))
         clickListener()
@@ -69,8 +78,25 @@ class HomeFragment : Fragment() {
         }
         binding.Ad.setOnClickListener {
              startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/SMARTCASH21")))
+            db.collection("users")
+                .document(auth.currentUser?.uid.toString())
+                .update("userCoin", FieldValue.increment(250))
+                .addOnSuccessListener {
+                            val transaction = Transaction(
+                                title = "Awesome telegram join bonus",
+                                time = Calendar.getInstance().timeInMillis.toString(),
+                                coin = "250"
+                            )
+                            db.collection("users")
+                                .document(auth.currentUser?.uid.toString())
+                                .collection("transaction")
+                                .document(UUID.randomUUID().toString())
+                                .set(transaction)
 
- }
+
+                }
+
+        }
 
 
     }

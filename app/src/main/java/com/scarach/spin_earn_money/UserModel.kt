@@ -12,6 +12,7 @@ data class UserModel(
     var userCoin: Int = 0,
     var userImageUrl: String = "",
     var userReferId: String = "",
+    var joinReferId: String = "",
     var dailyBonus: String = "",
     val timeStamp: Timestamp? = null,
 
@@ -20,7 +21,6 @@ data class UserModel(
 data class Withdrawal(
     var userName: String = "",
     var userEmail: String = "",
-    var userCoin: Int = 0,
     var withdrawalCoin: Int = 0,
     var withdrawalAccount: String ="",
     val timeStamp: Timestamp? = null,
@@ -46,12 +46,16 @@ open class Transaction(
 )
 
 data class Admin(
-    var click: Int = 0,
-    var click1: Int = 0,
-    var impression: Int = 0,
-    var impression1: Int = 0,
+    var startAppClick: Int = 0,
+    var applovinClick: Int = 0,
+    var startAppImpression: Int = 0,
+    var applovinImpression: Int = 0,
     var spin: Int = 0,
-    var scratch: Int = 0
+    var scratch: Int = 0,
+    var applovinTaskCoin: Int = 0,
+    var startAppTaskCoin: Int = 0,
+    var maxWithdraw: Int = 0,
+    var minimumWithdraw: Int = 0
 )
 
 data class Scratch(

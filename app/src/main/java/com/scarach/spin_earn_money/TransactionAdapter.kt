@@ -36,7 +36,7 @@ class TransactionAdapter(
         holder.title.text = transaction.title
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH)
         try {
-            holder.time.text = convertToCustomFormat(transaction.time)
+            holder.time.text = getDate(transaction.time.toLong(),"dd/MM/yyyy hh:mm:ss")
         } catch (ex: ParseException) {
             println(ex.toString())
         }
@@ -50,12 +50,22 @@ class TransactionAdapter(
         return transactionList.size
     }
 
-    private fun convertToCustomFormat(dateStr: String?): String {
-        val utc = TimeZone.getTimeZone("UTC")
-        val sourceFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
-        val destFormat = SimpleDateFormat("dd-MMM-YYYY HH:mm aa")
-        sourceFormat.timeZone = utc
-        val convertedDate = sourceFormat.parse(dateStr)
-        return destFormat.format(convertedDate)
+//    private fun convertToCustomFormat(dateStr: String?): String {
+//        val utc = TimeZone.getTimeZone("UTC")
+//        val sourceFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+//       // val destFormat = SimpleDateFormat("dd-MMM-YYYY HH:mm aa")
+//        sourceFormat.timeZone = utc
+//        val convertedDate = sourceFormat.parse(dateStr)
+//      //  return destFormat.format(convertedDate)
+//    }
+
+    fun getDate(milliSeconds: Long, dateFormat: String?): String? {
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat(dateFormat)
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return formatter.format(calendar.time)
     }
 }

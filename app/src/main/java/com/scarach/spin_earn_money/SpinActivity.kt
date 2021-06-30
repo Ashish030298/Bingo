@@ -9,6 +9,7 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.scarach.spin_earn_money.SpinWheel.model.LuckyItem
 import com.scarach.spin_earn_money.databinding.ActivitySpinBinding
@@ -74,13 +75,9 @@ class SpinActivity : CoreBaseActivity() {
             .document(auth.currentUser?.uid.toString())
             .update("userCoin", FieldValue.increment(cash.toLong()))
             .addOnSuccessListener {
-                db.collection("users")
-                    .document(auth.currentUser?.uid.toString())
-                    .update("userCoin", FieldValue.increment(100))
-                    .addOnSuccessListener {
                         val transaction = Transaction(
                             title = title,
-                            time = Calendar.getInstance().time.toString(),
+                            time = Calendar.getInstance().timeInMillis.toString(),
                             coin = cash.toString()
                         )
                         db.collection("users")
@@ -89,7 +86,7 @@ class SpinActivity : CoreBaseActivity() {
                             .document(UUID.randomUUID().toString())
                             .set(transaction)
 
-                    }
+
             }
     }
 
@@ -123,7 +120,7 @@ class SpinActivity : CoreBaseActivity() {
         AppPreferences.initialize(this)
         val dbDate: Date
         val defaultSpinDate = "16/06/2021"
-        AppPreferences.putString(AppPreferences.PrefKeys.SPIN_DATE, defaultSpinDate)
+       // AppPreferences.putString(AppPreferences.PrefKeys.SPIN_DATE, defaultSpinDate)
         val currentDate = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
         dbDate = if (!AppPreferences.hasKey(AppPreferences.PrefKeys.SPIN_DATE)) {

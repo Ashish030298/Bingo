@@ -30,7 +30,10 @@ class TransactionFragment : Fragment() {
         db.collection("users")
             .document(auth.currentUser?.uid.toString())
             .collection("transaction")
-            .get().addOnSuccessListener {
+            .orderBy("time", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .limit(25)
+            .get()
+            .addOnSuccessListener {
                 for (snapshot in it) {
                     val transaction = snapshot.toObject(Transaction::class.java)
                     transactionList.add(transaction)

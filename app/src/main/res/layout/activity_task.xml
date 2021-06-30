@@ -136,6 +136,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="00:09:59s"
         android:textColor="@color/black"
         android:textSize="25sp"
@@ -143,15 +144,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AdBtn" />
 
+
+
     <com.applovin.mediation.ads.MaxAdView
+        xmlns:maxads="http://schemas.applovin.com/android/1.0"
+        maxads:adUnitId="ca8dad739f78e1e3"
+        maxads:adFormat="MREC"
         android:layout_width="300dp"
         android:layout_height="250dp"
-        android:background="#ededed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        maxads:adFormat="MREC"
-        maxads:adUnitId="ca8dad739f78e1e3">
-    </com.applovin.mediation.ads.MaxAdView>
+        app:layout_constraintStart_toStartOf="parent">
+</com.applovin.mediation.ads.MaxAdView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

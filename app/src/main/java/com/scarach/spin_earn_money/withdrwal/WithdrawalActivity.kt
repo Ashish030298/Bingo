@@ -19,6 +19,10 @@ class WithdrawalActivity : CoreBaseActivity() {
 //        binding.withdrawalRv.layoutManager = LinearLayoutManager(this)
         getAdminWithdrawalData()
 
+        binding.backBtn.setOnClickListener {
+            onBackPressed()
+        }
+
 
 
     }

@@ -11,6 +11,7 @@ import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.ads.MaxInterstitialAd
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -104,7 +105,7 @@ class DailyBonusActivity : CoreBaseActivity(), MaxAdListener {
                     .addOnSuccessListener {
                         val transaction = Transaction(
                             title = "Big Bonus",
-                            time = Calendar.getInstance().time.toString(),
+                            time = Calendar.getInstance().timeInMillis.toString(),
                             coin = "100"
                         )
                         db.collection("users")

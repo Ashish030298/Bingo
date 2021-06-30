@@ -1,14 +1,10 @@
 package com.scarach.spin_earn_money;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,10 +15,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,36 +33,36 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.JsonObject;
 import com.scarach.spin_earn_money.home.HomeFragment;
 import com.startapp.sdk.ads.nativead.NativeAdDetails;
 import com.startapp.sdk.ads.nativead.NativeAdPreferences;
 import com.startapp.sdk.ads.nativead.StartAppNativeAd;
 import com.startapp.sdk.adsbase.Ad;
 import com.startapp.sdk.adsbase.StartAppAd;
-import com.startapp.sdk.adsbase.StartAppSDK;
 import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 import com.startapp.sdk.adsbase.adlisteners.VideoListener;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
-public class CoreBaseActivity extends AppCompatActivity {
+public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener {
     public static int getScratch;
     public static int getTaskOneClick;
     public static int getTaskTwoClick;
     public static int getSpin;
     public static int getTaskOneImpression;
+    public static int getApplovinTaskCoin;
+    public static int getStartAppTaskCoin;
     public static int getTaskTwoImpression;
     public static String ad_id = "205427187";
     public static String userName;
     public static String userEmail;
+    public static boolean isUserFirstTimeWithdrawal;
     public static int userCoin;
     public static String userImageUrl;
     public static String userDailyBonus;
@@ -84,6 +83,12 @@ public class CoreBaseActivity extends AppCompatActivity {
     public String IP_Address_API_key = "50k108-05v179-19pl8u-2391d5";
     private String TAG = "CoreBaseActivity";
     public String Check_IP_Address_Link = "https://iplist.cc/api";
+    private MaxInterstitialAd interstitialAd;
+    public static int maxWithdraw;
+    public static int minimumWithdraw;
+    public static String joinReferId;
+    public static String userReferId;
+
 
     public void setNativeAd(@Nullable List<NativeAdDetails> nativeAd) {
         this.nativeAdList = nativeAd;
@@ -95,6 +100,7 @@ public class CoreBaseActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StartAppAd.disableSplash();
         mActivity = this;
         mContext = getApplicationContext();
         AppLovinSdk.getInstance( this ).setMediationProvider( "max" );
@@ -104,6 +110,7 @@ public class CoreBaseActivity extends AppCompatActivity {
                 // AppLovin SDK is initialized, start loading ads
             }
         });
+       // showApplovin();
         startAppAd = new StartAppAd(mContext);
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -128,7 +135,7 @@ public class CoreBaseActivity extends AppCompatActivity {
         });
     }
 
-    private void getData() {
+    private void getAdminData() {
         db.collection("Admin")
                 .document("spinhub")
                 .get()
@@ -137,12 +144,16 @@ public class CoreBaseActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         admin = documentSnapshot.toObject(Admin.class);
                         if (admin != null) {
-                            getTaskTwoClick = admin.getClick1();
-                            getTaskTwoImpression = admin.getImpression1();
+                            getTaskTwoClick = admin.getApplovinClick();
+                            getTaskTwoImpression = admin.getApplovinImpression();
                             getScratch = admin.getScratch();
                             getSpin = admin.getSpin();
-                            getTaskOneClick = admin.getClick();
-                            getTaskOneImpression = admin.getImpression();
+                            getTaskOneClick = admin.getStartAppClick();
+                            getTaskOneImpression = admin.getStartAppImpression();
+                            getApplovinTaskCoin = admin.getApplovinTaskCoin();
+                            getStartAppTaskCoin = admin.getStartAppTaskCoin();
+                            maxWithdraw = admin.getMaxWithdraw();
+                            minimumWithdraw = admin.getMinimumWithdraw();
                         }
                     }
                 });
@@ -161,6 +172,9 @@ public class CoreBaseActivity extends AppCompatActivity {
                         userCoin = userData.getUserCoin();
                         userImageUrl = userData.getUserImageUrl();
                         userDailyBonus = userData.getDailyBonus();
+                        joinReferId = userData.getJoinReferId();
+                        userReferId = userData.getUserReferId();
+                        isUserFirstTimeWithdrawal = userData.isOneTimeWithdrawal();
                     }
                 });
     }
@@ -193,11 +207,12 @@ public class CoreBaseActivity extends AppCompatActivity {
         super.onStart();
         if (auth.getCurrentUser() != null) {
             getUserData();
-            getData();
+            getAdminData();
             showInterstitialAd();
             loadNativeAd();
             //getIpAddress();
             checkProxy();
+            testing();
         }
     }
 
@@ -277,7 +292,7 @@ public class CoreBaseActivity extends AppCompatActivity {
 
                     }else {
                         ViewDialog alert = new ViewDialog();
-                        alert.showDialog(mActivity, "Please Connect to US PVN!!\nand enjoy our services.");
+                        alert.showDialog(mActivity, "Please Connect to US VPN!!\nand Start work.");
                     }
 
                 } catch (JSONException e) {
@@ -296,6 +311,78 @@ public class CoreBaseActivity extends AppCompatActivity {
 
     }
 
+    private void showApplovin(){
+        interstitialAd = new MaxInterstitialAd("274d1164d0b4a1f8", this);
+        interstitialAd.setListener(this);
+
+        // Load the first ad
+
+        // Load the first ad
+        interstitialAd.loadAd();
+    }
 
 
+    @Override
+    public void onAdLoaded(MaxAd ad) {
+        interstitialAd.showAd();
+    }
+
+    @Override
+    public void onAdDisplayed(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdHidden(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdClicked(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdLoadFailed(String adUnitId, MaxError error) {
+        interstitialAd.loadAd();
+    }
+
+    @Override
+    public void onAdDisplayFailed(MaxAd ad, MaxError error) {
+        interstitialAd.loadAd();
+    }
+
+    public void testing() {
+        db.collection("users")
+                .whereEqualTo("userReferId", "430157s")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Log.d(TAG, "Failure getting documents: "+ e.getMessage());
+
+            }
+        });
+
+    }
+
+    public void transaction(String title, String time, String coin){
+        Transaction transaction = new Transaction(coin,time, title);
+        db.collection("users")
+                .document(auth.getCurrentUser().getUid())
+                    .collection("transaction")
+                .document(UUID.randomUUID().toString())
+                .set(transaction);
+    }
 }

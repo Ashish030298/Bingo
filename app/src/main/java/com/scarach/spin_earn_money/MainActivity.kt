@@ -3,41 +3,47 @@ package com.scarach.spin_earn_money
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue
 import com.scarach.spin_earn_money.databinding.ActivityMainBinding
 import com.scarach.spin_earn_money.home.HomeActivity
-import com.startapp.sdk.adsbase.StartAppAd
-import com.startapp.sdk.adsbase.StartAppSDK
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : CoreBaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val TAG = "MainActivity"
     private val RC_SIGN_IN = 103
-    private lateinit var db:FirebaseFirestore
-    private lateinit var auth:FirebaseAuth
+    private var isReferIdValid: Boolean = false
+    private var documentId: String =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        db = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
         createGoogleEmail()
 
         binding.googleLogin.setOnClickListener {
             binding.pb.visibility = View.VISIBLE
             signIn()
+
         }
+
+
+
+
+
+
 
     }
 
@@ -79,10 +85,10 @@ class MainActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val id =
-                        Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+                    val id = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
                     val referId = UUID.randomUUID().toString()
                     val user = auth.currentUser
+
                     val userModel = UserModel(
                         id = id,
                         userName = user?.displayName.toString(),
@@ -99,6 +105,9 @@ class MainActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Log.d(TAG, "DocumentSnapshot successfully written!")
                             binding.pb.visibility = View.GONE
+                            transaction("Refer code Bonus",
+                                Calendar.getInstance().timeInMillis.toString(),
+                                "250")
                             goToNewActivity()
                         }
 
@@ -121,13 +130,12 @@ class MainActivity : AppCompatActivity() {
         val user = auth.currentUser
         if (user != null) {
             goToNewActivity()
-            initailize()
+
         }
     }
 
-    fun initailize(){
-        StartAppSDK.init(CoreBaseActivity.mContext, CoreBaseActivity.ad_id, false)
-        StartAppAd.disableSplash()
-    }
+
+
+
 
 }

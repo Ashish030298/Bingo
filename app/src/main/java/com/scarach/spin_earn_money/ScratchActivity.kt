@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.anupkumarpanwar.scratchview.ScratchView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.scarach.spin_earn_money.databinding.ActivityScratchBinding
 import com.startapp.sdk.adsbase.Ad
@@ -169,7 +170,7 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
             .addOnSuccessListener {
                         val transaction = Transaction(
                             title = title,
-                            time = Calendar.getInstance().time.toString(),
+                            time = Calendar.getInstance().timeInMillis.toString(),
                             coin = cash.toString()
                         )
                         db.collection("users")

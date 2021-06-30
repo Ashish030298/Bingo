@@ -10,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.scarach.spin_earn_money.CoreBaseActivity.*
 import com.scarach.spin_earn_money.R
 import com.scarach.spin_earn_money.TransactionFragment
 import com.scarach.spin_earn_money.databinding.FragmentWalletBinding
@@ -31,6 +33,7 @@ class WalletFragment : Fragment() {
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
     private val TAG = "Wallet"
+    private var USERS_COINS : Int = 0
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
@@ -71,7 +74,21 @@ class WalletFragment : Fragment() {
 
 
         binding.redeem.setOnClickListener {
-            startActivity(Intent(context, WithdrawalActivity::class.java))
+            if (isUserFirstTimeWithdrawal) {
+                if (USERS_COINS <= maxWithdraw) {
+                    startActivity(Intent(context, WithdrawalActivity::class.java))
+                }else
+                {
+                    Toast.makeText(context,"you have low balance please increase your balance!", Toast.LENGTH_SHORT).show()
+
+                }
+            }else{
+                if (USERS_COINS <= minimumWithdraw){
+                    startActivity(Intent(context, WithdrawalActivity::class.java))
+                }else{
+                    Toast.makeText(context,"you have low balance please increase your balance!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -103,6 +120,8 @@ class WalletFragment : Fragment() {
             .addOnSuccessListener {
                 if (it != null) {
                     binding.currentBalance.text = "${it.getLong("userCoin")} COINS"
+                    val coin = "${it.getLong("userCoin")}"
+                    USERS_COINS = coin.toInt()
 
                     Log.d(TAG, "getUserData: ${it.data}")
                 }
