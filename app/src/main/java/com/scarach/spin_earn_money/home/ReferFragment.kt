@@ -60,10 +60,10 @@ class ReferFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {
                 if( s?.length == 6){
-                    if (!binding.referCodeEd.text.equals(userReferId)){
-                        referProcess()
-                    }else{
+                    if (binding.referCodeEd.text.toString() == userReferId){
                         Toast.makeText(context as Activity, "It's your code!!",Toast.LENGTH_SHORT).show()
+                    }else{
+                        referProcess()
                     }
                 }
             }
@@ -146,10 +146,15 @@ class ReferFragment : Fragment() {
                                     .document(UUID.randomUUID().toString())
                                     .set(transaction)
                                     .addOnSuccessListener {
+                                        val data = hashMapOf(
+                                            "userCoin" to FieldValue.increment(250),
+                                            "joinReferId" to binding.referCodeEd.text.toString()
+                                        )
                                         db.collection("users")
                                             .document(auth.currentUser?.uid.toString())
-                                            .update("userCoin",FieldValue.increment(250))
+                                            .update(data)
                                             .addOnSuccessListener {
+                                                binding.referCodeEd.visibility = View.GONE
                                                 val transaction = Transaction(
                                                     title = "Refer code bonus",
                                                     time = Calendar.getInstance().timeInMillis.toString(),
@@ -160,6 +165,9 @@ class ReferFragment : Fragment() {
                                                     .collection("transaction")
                                                     .document(UUID.randomUUID().toString())
                                                     .set(transaction)
+                                                    .addOnSuccessListener {
+                                                        (activity as CoreBaseActivity).getUserData()
+                                                    }
                                             }
                                     }
 

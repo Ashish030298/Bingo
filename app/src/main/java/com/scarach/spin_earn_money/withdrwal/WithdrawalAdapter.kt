@@ -85,16 +85,17 @@ class WithdrawalAdapter(val context: Context, val withdrawalArrayList:ArrayList<
                     userName = CoreBaseActivity.userName,
                     userEmail = CoreBaseActivity.userEmail,
                     withdrawalCoin = coin,
+                    withdrawalType = name,
                     withdrawalAccount = input.text.toString(),
-                    timeStamp = Timestamp.now()
+                    timeStamp = Calendar.getInstance().timeInMillis.toString()
                 )
 
                 val collection = UUID.randomUUID().toString()
                 val db = FirebaseFirestore.getInstance()
                 val auth = FirebaseAuth.getInstance()
-                db.collection("withdrawal")
+                db.collection("users")
                     .document(auth.currentUser?.uid.toString())
-                    .collection(collection)
+                    .collection("withdraw")
                     .add(withdrawal)
                     .addOnSuccessListener {
                         db.collection("users")

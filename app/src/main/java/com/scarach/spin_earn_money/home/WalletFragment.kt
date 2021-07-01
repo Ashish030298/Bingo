@@ -75,7 +75,7 @@ class WalletFragment : Fragment() {
 
         binding.redeem.setOnClickListener {
             if (isUserFirstTimeWithdrawal) {
-                if (USERS_COINS <= maxWithdraw) {
+                if (USERS_COINS >= maxWithdraw) {
                     startActivity(Intent(context, WithdrawalActivity::class.java))
                 }else
                 {
@@ -83,7 +83,7 @@ class WalletFragment : Fragment() {
 
                 }
             }else{
-                if (USERS_COINS <= minimumWithdraw){
+                if (USERS_COINS >= minimumWithdraw){
                     startActivity(Intent(context, WithdrawalActivity::class.java))
                 }else{
                     Toast.makeText(context,"you have low balance please increase your balance!", Toast.LENGTH_SHORT).show()

@@ -13,7 +13,7 @@ class WithdrawalActivity : CoreBaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWithdrawalBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        withdrawalList = withdrawalArrayList
+//        withdrawalList = withdrawalArrayList
 //        val adapter = WithdrawalAdapter(this, withdrawalArrayList = withdrawalArrayList)
 //        binding.withdrawalRv.adapter = adapter
 //        binding.withdrawalRv.layoutManager = LinearLayoutManager(this)
@@ -37,8 +37,8 @@ class WithdrawalActivity : CoreBaseActivity() {
                     for (documentSnapshot in queryDocumentSnapshots) {
                         val withdrawal = documentSnapshot.toObject(
                             AdminWithdrawal::class.java)
-                        withdrawalArrayList.add(withdrawal)
-                        val adapter = WithdrawalAdapter(this, withdrawalArrayList = withdrawalArrayList)
+                        withdrawalList.add(withdrawal)
+                        val adapter = WithdrawalAdapter(this, withdrawalArrayList = withdrawalList)
                         binding.withdrawalRv.adapter = adapter
                         binding.withdrawalRv.layoutManager = LinearLayoutManager(this)
                     }

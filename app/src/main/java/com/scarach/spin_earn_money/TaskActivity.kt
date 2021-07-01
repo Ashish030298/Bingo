@@ -19,12 +19,11 @@ import com.startapp.sdk.adsbase.Ad
 import com.startapp.sdk.adsbase.adlisteners.AdDisplayListener
 import java.util.*
 
-class TaskActivity : CoreBaseActivity(), MaxAdListener, MaxAdViewAdListener {
+class TaskActivity : CoreBaseActivity(), MaxAdListener{
     private lateinit var binding: ActivityTaskBinding
     private lateinit var timer:CountDownTimer
     private var isTimerEnabled:Boolean= false
     private var bundle: Bundle? = null
-    private var adView: MaxAdView? = null
     private var interstitialAd: MaxInterstitialAd? = null
 
 
@@ -33,8 +32,6 @@ class TaskActivity : CoreBaseActivity(), MaxAdListener, MaxAdViewAdListener {
         binding = ActivityTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bundle = intent.extras
-
-        createMrecAd()
 
         binding.AdBtn.setOnClickListener {
             AppPreferences.initialize(this)
@@ -258,11 +255,13 @@ class TaskActivity : CoreBaseActivity(), MaxAdListener, MaxAdViewAdListener {
     }
 
     override fun onAdDisplayed(ad: MaxAd?) {
-        val impressionCount = AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_IMPRESSION_TASK_Two,0)
-        val impression = getTaskTwoImpression
-        val preferences = AppPreferences.PrefKeys.TOTAL_IMPRESSION_TASK_Two
-        taskOneClick(impressionCount,impression,preferences,"Click ad and download")
-
+        if(ad?.format?.isFullscreenAd == true) {
+            val impressionCount =
+                AppPreferences.getInt(AppPreferences.PrefKeys.TOTAL_IMPRESSION_TASK_Two, 0)
+            val impression = getTaskTwoImpression
+            val preferences = AppPreferences.PrefKeys.TOTAL_IMPRESSION_TASK_Two
+            taskOneClick(impressionCount, impression, preferences, "Click ad and download")
+        }
     }
 
     override fun onAdHidden(ad: MaxAd?) {
@@ -276,29 +275,6 @@ class TaskActivity : CoreBaseActivity(), MaxAdListener, MaxAdViewAdListener {
         val preferences = AppPreferences.PrefKeys.TOTAL_CLICk_TASK_Two
         val nextTask = AppPreferences.PrefKeys.NEXT_TASK
         adClickProcess(impressionCount, impression, preferences,nextTask, click)
-    }
-
-    fun createMrecAd() {
-        adView = MaxAdView("ca8dad739f78e1e3", MaxAdFormat.MREC, this)
-        adView!!.setListener(this)
-
-        // MREC width and height are 300 and 250 respectively, on phones and tablets
-        val widthPx = AppLovinSdkUtils.dpToPx(this, 300)
-        val heightPx = AppLovinSdkUtils.dpToPx(this, 250)
-
-        val params = FrameLayout.LayoutParams(widthPx, heightPx)
-        params.gravity = Gravity.BOTTOM or Gravity.CENTER
-        adView!!.layoutParams = params
-
-        // Set background or background color for MRECs to be fully functional
-
-        val rootView = findViewById<ViewGroup>(android.R.id.content)
-        rootView.addView(adView)
-
-        // Load the ad
-        adView!!.loadAd()
-        adView!!.visibility = View.VISIBLE
-        adView!!.startAutoRefresh()
     }
 
 

@@ -1,10 +1,17 @@
 package com.scarach.spin_earn_money;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,12 +25,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxAdViewAdListener;
 import com.applovin.mediation.MaxError;
 import com.applovin.mediation.ads.MaxAdView;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
+import com.applovin.sdk.AppLovinSdkUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener {
+public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener, MaxAdViewAdListener {
     public static int getScratch;
     public static int getTaskOneClick;
     public static int getTaskTwoClick;
@@ -59,7 +69,7 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
     public static int getApplovinTaskCoin;
     public static int getStartAppTaskCoin;
     public static int getTaskTwoImpression;
-    public static String ad_id = "205427187";
+    public static String ad_id = "205439941";
     public static String userName;
     public static String userEmail;
     public static boolean isUserFirstTimeWithdrawal;
@@ -68,14 +78,13 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
     public static String userDailyBonus;
     public static Activity mActivity;
     public static Context mContext;
-    public Admin admin;
+    private Admin admin;
     public FirebaseFirestore db;
     public FirebaseAuth auth;
     public StartAppAd startAppAd;
     public boolean isStartAppLoad = false;
-    public UserModel userData;
+    private UserModel userData;
     public static List<NativeAdDetails> nativeAdList;
-    public ArrayList<AdminWithdrawal> withdrawalArrayList;
     public String IP_Address;
     public String IP_Address_Start_link = "http://proxycheck.io/v2/";
     public String IP_Address_end_link = "&vpn=1&asn=1&risk=1&port=1&seen=1&days=7&tag=msg";
@@ -88,6 +97,7 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
     public static int minimumWithdraw;
     public static String joinReferId;
     public static String userReferId;
+    public MaxAdView adView;
 
 
     public void setNativeAd(@Nullable List<NativeAdDetails> nativeAd) {
@@ -103,6 +113,8 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
         StartAppAd.disableSplash();
         mActivity = this;
         mContext = getApplicationContext();
+
+        Log.d(TAG, "onCreate: "+mActivity.getLocalClassName()+", "+mContext);
         AppLovinSdk.getInstance( this ).setMediationProvider( "max" );
         AppLovinSdk.initializeSdk( this, new AppLovinSdk.SdkInitializationListener() {
             @Override
@@ -110,12 +122,12 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
                 // AppLovin SDK is initialized, start loading ads
             }
         });
-       // showApplovin();
+        showApplovin();
         startAppAd = new StartAppAd(mContext);
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         AppPreferences.Companion.initialize(mContext);
-        withdrawalArrayList = new ArrayList();
+
 
     }
 
@@ -159,7 +171,7 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
                 });
     }
 
-    private void getUserData() {
+    public void getUserData() {
         db.collection("users")
                 .document(auth.getCurrentUser().getUid())
                 .get()
@@ -212,7 +224,8 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
             loadNativeAd();
             //getIpAddress();
             checkProxy();
-            testing();
+           // testing();
+            createMrecAd();
         }
     }
 
@@ -384,5 +397,58 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
                     .collection("transaction")
                 .document(UUID.randomUUID().toString())
                 .set(transaction);
+    }
+
+    public static void launchEmailClient(Activity activity, String subject, String message) {
+        try {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "smartpromotion21@gmail.com", null));
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "smartpromotion21@gmail.com" });
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+            activity.startActivity(Intent.createChooser(emailIntent, "Send email by"));
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        } catch (ActivityNotFoundException e) {
+        }
+    }
+
+    void createMrecAd()
+    {
+        adView = new MaxAdView( "ca8dad739f78e1e3", MaxAdFormat.MREC, this );
+        adView.setListener( this );
+
+        // MREC width and height are 300 and 250 respectively, on phones and tablets
+        int widthPx = AppLovinSdkUtils.dpToPx( this, 300 );
+        int heightPx = AppLovinSdkUtils.dpToPx( this, 250 );
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(widthPx, heightPx);
+        layoutParams.gravity =  Gravity.CENTER|Gravity.BOTTOM;
+
+        adView.setLayoutParams(layoutParams);
+
+
+        ViewGroup rootView = findViewById( android.R.id.content );
+        rootView.addView( adView );
+
+        // Load the ad
+        adView.loadAd();
+
+        if (!mActivity.getLocalClassName().equals("TaskActivity")) {
+            adView.setVisibility(View.GONE);
+        } else {
+            adView.setVisibility(View.VISIBLE);
+            adView.startAutoRefresh();
+        }
+
+    }
+
+    @Override
+    public void onAdExpanded(MaxAd ad) {
+
+    }
+
+    @Override
+    public void onAdCollapsed(MaxAd ad) {
+
     }
 }

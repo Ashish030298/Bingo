@@ -39,7 +39,6 @@ class SpinActivity : CoreBaseActivity() {
             showAdInterstitial()
             spinCount()
         }
-        // }
         binding.wheelview.setLuckyRoundItemSelectedListener { index -> updateCoins(index) }
 
     }

@@ -12,12 +12,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.scarach.spin_earn_money.*
 import com.scarach.spin_earn_money.databinding.FragmentHomeBinding
+import com.scarach.spin_earn_money.scratch.ScratchActivity
 import com.startapp.sdk.ads.nativead.NativeAdDetails
 import com.startapp.sdk.ads.nativead.NativeAdPreferences
 import com.startapp.sdk.ads.nativead.StartAppNativeAd

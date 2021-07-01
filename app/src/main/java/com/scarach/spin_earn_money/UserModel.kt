@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.IgnoreExtraProperties
 
-data class UserModel(
+open class UserModel(
     var id: String = "",
     var isOneTimeWithdrawal:Boolean = false,
     var userName: String = "",
@@ -14,7 +14,7 @@ data class UserModel(
     var userReferId: String = "",
     var joinReferId: String = "",
     var dailyBonus: String = "",
-    val timeStamp: Timestamp? = null,
+    val timeStamp: Timestamp? = null
 
     )
 
@@ -22,16 +22,17 @@ data class Withdrawal(
     var userName: String = "",
     var userEmail: String = "",
     var withdrawalCoin: Int = 0,
+    var withdrawalType: String = "",
     var withdrawalAccount: String ="",
-    val timeStamp: Timestamp? = null,
+    val timeStamp: String = ""
 
     )
 
-open class AdminWithdrawal(
+data class AdminWithdrawal(
     var name: String = "",
     var imgurl: String = "",
     var minimum: Int = 0,
-    var max: Int = 0,
+    var max: Int = 0
 
     )
 
@@ -42,10 +43,10 @@ open class AdminWithdrawal(
 open class Transaction(
     var coin: String = "",
     var time: String = "",
-    var title: String = "",
+    var title: String = ""
 )
 
-data class Admin(
+open class Admin(
     var startAppClick: Int = 0,
     var applovinClick: Int = 0,
     var startAppImpression: Int = 0,
@@ -58,9 +59,9 @@ data class Admin(
     var minimumWithdraw: Int = 0
 )
 
-data class Scratch(
+open class Scratch(
     var scratchcoin: String = "",
-    var isMask: Boolean = false,
+    var isMask: Boolean = false
 )
 
 

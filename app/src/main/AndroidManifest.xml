@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bingo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ViewDialog"></activity>
+        <activity android:name=".ExtraActivity"></activity>
+        <activity android:name=".ViewDialog" />
         <activity android:name=".withdrwal.WithdrawalActivity" />
         <activity android:name=".FloatingActivity" />
         <activity android:name=".MainActivity">
@@ -29,13 +30,13 @@
         </activity>
         <activity android:name=".TaskActivity" />
         <activity android:name=".SpinActivity" />
-        <activity android:name=".ScratchActivity" />
+        <activity android:name=".scratch.ScratchActivity" />
         <activity android:name=".DailyBonusActivity" /> <!-- <activity android:name=".ProfileActivity" /> -->
         <activity android:name=".home.HomeActivity" />
 
         <meta-data
             android:name="com.startapp.sdk.APPLICATION_ID"
-            android:value="205427187" />
+            android:value="205439941" />
         <meta-data
             android:name="com.startapp.sdk.RETURN_ADS_ENABLED"
             android:value="false" />

@@ -3,18 +3,14 @@ package com.scarach.spin_earn_money
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FieldValue
+import com.onesignal.OneSignal
 import com.scarach.spin_earn_money.databinding.ActivityMainBinding
 import com.scarach.spin_earn_money.home.HomeActivity
 import java.util.*
@@ -27,10 +23,18 @@ class MainActivity : CoreBaseActivity() {
     private val RC_SIGN_IN = 103
     private var isReferIdValid: Boolean = false
     private var documentId: String =""
+    private val ONESIGNAL_APP_ID = "93e58b1b-86e6-45b3-9d3c-a1463dd9c92f"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this)
+        OneSignal.setAppId(ONESIGNAL_APP_ID)
         createGoogleEmail()
 
         binding.googleLogin.setOnClickListener {

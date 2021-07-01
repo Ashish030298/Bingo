@@ -113,13 +113,13 @@ class DailyBonusActivity : CoreBaseActivity(), MaxAdListener {
                             .collection("transaction")
                             .document(UUID.randomUUID().toString())
                             .set(transaction)
-                        getUserData()
+                        getUserDatas()
                         Toast.makeText(this,"Awesome daily bonus is add in your wallet",Toast.LENGTH_SHORT).show()
                     }
             }
     }
 
-    private fun getUserData() {
+    private fun getUserDatas() {
         val user = auth.currentUser
         db.collection("users")
             .document(user?.uid.toString())
@@ -173,7 +173,7 @@ class DailyBonusActivity : CoreBaseActivity(), MaxAdListener {
 
     override fun onStart() {
         super.onStart()
-        getUserData()
+        getUserDatas()
         showApplovin()
 
     }
