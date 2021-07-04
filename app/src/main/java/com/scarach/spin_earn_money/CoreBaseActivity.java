@@ -299,13 +299,12 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
 
                     }*/
                     JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getString("countryname").equals("India") || jsonObject.getString("countryname").equals("United States")
-                    || jsonObject.getString("countrycode").equals("US")){
+                    if (jsonObject.getString("countrycode").equals("US") || jsonObject.getString("countrycode").equals("UK") || jsonObject.getString("countrycode").equals("GB")){
                         Log.d(TAG, "onResponse: "+jsonObject.getString("countryname"));
 
                     }else {
                         ViewDialog alert = new ViewDialog();
-                        alert.showDialog(mActivity, "Please Connect to US VPN!!\nand Start work.");
+                        alert.showDialog(mActivity, "Please Connect to United State/United Kingdom VPN!!\nand Start work.");
                     }
 
                 } catch (JSONException e) {
@@ -337,7 +336,7 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
 
     @Override
     public void onAdLoaded(MaxAd ad) {
-        interstitialAd.showAd();
+//        interstitialAd.showAd();
     }
 
     @Override
@@ -433,11 +432,15 @@ public class CoreBaseActivity extends AppCompatActivity implements MaxAdListener
         // Load the ad
         adView.loadAd();
 
-        if (!mActivity.getLocalClassName().equals("TaskActivity")) {
-            adView.setVisibility(View.GONE);
-        } else {
+        if (mActivity.getLocalClassName().equals("TaskActivity")) {
             adView.setVisibility(View.VISIBLE);
             adView.startAutoRefresh();
+
+        } else if (mActivity.getLocalClassName().equals("HomeActivity")){
+            adView.setVisibility(View.GONE);
+        }else {
+            adView.setVisibility(View.GONE);
+
         }
 
     }

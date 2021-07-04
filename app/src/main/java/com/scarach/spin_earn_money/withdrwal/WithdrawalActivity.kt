@@ -20,6 +20,7 @@ class WithdrawalActivity : CoreBaseActivity() {
         getAdminWithdrawalData()
 
         binding.backBtn.setOnClickListener {
+            startAppAd.onBackPressed()
             onBackPressed()
         }
 

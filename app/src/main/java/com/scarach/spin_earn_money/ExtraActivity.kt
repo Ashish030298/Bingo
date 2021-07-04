@@ -14,6 +14,7 @@ class ExtraActivity : CoreBaseActivity() {
         binding = ActivityExtraBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.backBtn.setOnClickListener {
+            startAppAd.onBackPressed()
             onBackPressed()
         }
         howToWork()

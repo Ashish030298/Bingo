@@ -48,6 +48,7 @@ class DailyBonusActivity : CoreBaseActivity(), MaxAdListener {
         }
 
         binding.backBtn.setOnClickListener {
+            startAppAd.onBackPressed()
             onBackPressed()
         }
 

@@ -5,20 +5,25 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import com.onesignal.OneSignal
 import com.scarach.spin_earn_money.databinding.ActivityMainBinding
 import com.scarach.spin_earn_money.home.HomeActivity
 import java.util.*
 
 
-class MainActivity : CoreBaseActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var db:FirebaseFirestore
+    private lateinit var auth:FirebaseAuth
     private val TAG = "MainActivity"
     private val RC_SIGN_IN = 103
     private var isReferIdValid: Boolean = false
@@ -29,6 +34,8 @@ class MainActivity : CoreBaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
         // Enable verbose OneSignal logging to debug issues if needed.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
 
@@ -42,11 +49,6 @@ class MainActivity : CoreBaseActivity() {
             signIn()
 
         }
-
-
-
-
-
 
 
     }
@@ -136,6 +138,16 @@ class MainActivity : CoreBaseActivity() {
             goToNewActivity()
 
         }
+    }
+
+    fun transaction(title: String?, time: String?, coin: String?) {
+        val transaction = Transaction(
+            coin!!, time!!, title!!)
+        db.collection("users")
+            .document(auth.currentUser!!.uid)
+            .collection("transaction")
+            .document(UUID.randomUUID().toString())
+            .set(transaction)
     }
 
 

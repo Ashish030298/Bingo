@@ -43,6 +43,7 @@ class ScratchActivity : CoreBaseActivity(), ScratchView.IRevealListener {
         setScratch()
         scratchCard.setRevealListener(this)
         binding.backBtn.setOnClickListener {
+            startAppAd.onBackPressed()
             onBackPressed()
         }
 

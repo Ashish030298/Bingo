@@ -16,6 +16,7 @@ import com.applovin.sdk.AppLovinSdkUtils
 import com.google.firebase.firestore.FieldValue
 import com.scarach.spin_earn_money.databinding.ActivityTaskBinding
 import com.startapp.sdk.adsbase.Ad
+import com.startapp.sdk.adsbase.StartAppAd
 import com.startapp.sdk.adsbase.adlisteners.AdDisplayListener
 import java.util.*
 
@@ -46,6 +47,7 @@ class TaskActivity : CoreBaseActivity(), MaxAdListener{
         }
 
         binding.backBtn.setOnClickListener {
+            StartAppAd.onBackPressed(this)
             onBackPressed()
         }
 
